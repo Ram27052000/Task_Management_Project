@@ -6,8 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
-@Table(name="user")
+@Table(name="tuser")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,11 +17,15 @@ import lombok.Setter;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence_generator")
+    @SequenceGenerator(name="user_sequence_generator", allocationSize = 1)
     private int id;
 
     private String name;
 
     private String role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Task> task;
 
 }
