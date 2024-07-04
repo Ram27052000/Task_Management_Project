@@ -1,9 +1,12 @@
 package com.example.TaskManagement.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Date;
 
 
 @Entity
@@ -13,26 +16,23 @@ import java.util.List;
 @Setter
 public class Task {
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "task_sequence_generator")
-    @SequenceGenerator(name="task_sequence_generator", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_sequence_generator")
+    @SequenceGenerator(name = "task_sequence_generator", allocationSize = 1)
     private int taskId;
 
     @NonNull
     private String taskName;
 
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority;
+
+    private Date dueDate;
 
     @ManyToOne
-    @JoinColumn(name="parent_task_id", nullable = true)
-    private Task parentTask;
-
-    @OneToMany(mappedBy = "parentTask")
-    private List<Task> subtasks;
-
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name="user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
 }
