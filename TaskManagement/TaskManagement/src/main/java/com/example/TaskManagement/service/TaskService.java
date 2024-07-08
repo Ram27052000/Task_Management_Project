@@ -2,7 +2,6 @@ package com.example.TaskManagement.service;
 
 import com.example.TaskManagement.models.Task;
 import com.example.TaskManagement.repositories.TaskRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,14 @@ import java.util.Optional;
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
-    public TaskService(TaskRepository taskRepository){
+
+    public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
+    }
+
+
+    public Task createTask(Task task) {
+        return taskRepository.save(task);
     }
 
     public List<Task> getAllTasks() {
@@ -21,13 +26,13 @@ public class TaskService {
 
     public Optional<Task> getTaskUsingId(int id) throws Exception {
         boolean existsByTaskID = taskRepository.existsById(id);
-        if(!existsByTaskID){
+        if (!existsByTaskID) {
             throw new Exception("TASK ID NOT FOUND");
         }
         return taskRepository.findById(id);
     }
 
-    public Task  updateTaskUsingId(int id, Task taskDetails) {
+    public Task updateTaskUsingId(int id, Task taskDetails) {
         Task task = taskRepository.findById(id).orElseThrow();
         task.setTaskName(taskDetails.getTaskName());
         task.setPriority(taskDetails.getPriority());
@@ -36,10 +41,11 @@ public class TaskService {
         return taskRepository.save(taskDetails);
     }
 
-    public void deleteById(int id) throws Exception {
+    public void deleteById(int id) {
         Optional<Task> taskId = taskRepository.findById(id);
-        if(taskId.isPresent()){
+        if (taskId.isPresent()) {
             taskRepository.deleteById(id);
         }
     }
+
 }
